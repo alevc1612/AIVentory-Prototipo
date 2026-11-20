@@ -1,0 +1,34 @@
+AIVENTORY - VERSION QUE ABRE SIN SERVIDOR
+
+1. Descomprime el ZIP completo.
+2. Abre index.html con doble clic. No uses una direccion 127.0.0.1.
+3. No se necesita Node, Terminal ni instalar dependencias.
+
+Si tu navegador bloquea archivos locales, abre index.html con Chrome o Edge.
+Conserva todos los archivos y carpetas junto a index.html.
+
+Cliente: cliente@aiventory.pe / cliente2026
+Administrador: admin@aiventory.pe / admin2026
+
+Para GITHUB PAGES:
+Sube el contenido de esta carpeta (no el ZIP) al repositorio.
+Ve a Settings > Pages > Deploy from a branch > main > /(root) > Save.
+Utiliza la direccion que GitHub muestre cuando termine la publicacion.
+No uses el enlace al archivo de codigo ni una direccion 127.0.0.1.
+
+La interfaz, los ejemplos y los lectores de Excel/PDF estan incluidos.
+Las fuentes de Google son opcionales; sin Internet se usa una fuente alternativa.
+
+Esta es una version de demostracion en el navegador. No requiere servidor.
+Los datos y notificaciones quedan SOLO en el navegador de este equipo.
+No se comparten entre computadoras ni con otros visitantes del sitio.
+El contacto comercial no envia mensajes a una empresa remota.
+Para ver una solicitud entra como administrador en el mismo navegador.
+Las cuentas incluidas son publicas y NO ofrecen seguridad de produccion.
+Usa datos ficticios, no informacion confidencial ni tarjetas reales.
+
+El checkout acepta unicamente tarjeta 4242 4242 4242 4242, CVV 123
+y un vencimiento futuro. No hay cobros ni verificacion bancaria real.
+PDF requiere tablas con texto seleccionable; no incorpora OCR de escaneos.
+
+Esta copia no incluye inventarios, sesiones ni datos privados del proyecto original.

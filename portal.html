@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal AIVentory | Perfiles privados</title>
+    <meta
+      name="description"
+      content="Portal privado de AIVentory para perfiles Cliente y Administrador."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="local.css" />
+  </head>
+  <body class="portal-page">
+    <div class="grain"></div>
+
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="Volver a AIVentory">
+        <span class="brand-mark">AI</span>
+        <span>
+          <strong>AIVentory</strong>
+          <small>Portal privado</small>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="Navegación del portal">
+        <a href="index.html#plataforma">Plataforma</a>
+        <a href="index.html#contacto">Contacto</a>
+      </nav>
+
+      <button class="header-action hidden" id="logoutButton">Cerrar sesión</button>
+    </header>
+
+    <main>
+      <section class="section portal-gate reveal" id="acceso">
+        <div class="access-intro">
+          <div>
+            <p class="eyebrow">Portal de perfiles</p>
+            <h1>Acceso privado por rol.</h1>
+          </div>
+          <p>
+            El Cliente accede a sus dashboards de inventario, reportes y soporte.
+            El Administrador accede a herramientas diferentes: empresas activas,
+            usuarios, solicitudes comerciales, notificaciones de problemas y
+            estado general de la plataforma.
+          </p>
+        </div>
+
+        <div class="login-grid" aria-label="Formularios de acceso">
+          <form class="login-card client" method="post" data-login-form data-login-role="cliente">
+            <span class="profile-icon">C</span>
+            <p class="eyebrow">Perfil Cliente</p>
+            <h3>Empresa retail</h3>
+            <p>
+              Para operar inventarios, cargar archivos, ver predicciones y
+              reportar problemas con la plataforma.
+            </p>
+            <label>
+              Usuario
+              <input
+                type="email"
+                name="user"
+                autocomplete="username"
+                placeholder="cliente@aiventory.pe"
+                required
+              />
+            </label>
+            <label>
+              Contraseña
+              <input
+                type="password"
+                name="password"
+                autocomplete="current-password"
+                placeholder="Ingresa tu contraseña"
+                required
+              />
+            </label>
+            <small>Demo cliente: cliente@aiventory.pe / cliente2026</small>
+            <button class="primary-action" type="submit">Entrar como cliente</button>
+            <strong class="login-status" aria-live="polite"></strong>
+          </form>
+
+          <form class="login-card admin" method="post" data-login-form data-login-role="admin">
+            <span class="profile-icon">A</span>
+            <p class="eyebrow">Perfil Administrador</p>
+            <h3>Gestión de plataforma</h3>
+            <p>
+              Para controlar empresas, perfiles, usuarios, solicitudes de acceso
+              y problemas reportados por clientes.
+            </p>
+            <label>
+              Usuario
+              <input
+                type="email"
+                name="user"
+                autocomplete="username"
+                placeholder="admin@aiventory.pe"
+                required
+              />
+            </label>
+            <label>
+              Contraseña
+              <input
+                type="password"
+                name="password"
+                autocomplete="current-password"
+                placeholder="Ingresa tu contraseña"
+                required
+              />
+            </label>
+            <small>Demo: admin@aiventory.pe / admin2026</small>
+            <button class="primary-action" type="submit">Entrar como administrador</button>
+            <strong class="login-status" aria-live="polite"></strong>
+          </form>
+        </div>
+      </section>
+
+      <section class="section app-shell profile-workspace locked" id="workspace">
+        <aside class="dashboard-sidebar">
+          <div class="sidebar-profile">
+            <span class="avatar" id="workspaceAvatar">CR</span>
+            <div>
+              <strong id="workspaceName">Retail Norte</strong>
+              <small id="workspaceRole">Cuenta cliente</small>
+            </div>
+          </div>
+
+          <button class="notification-card" id="notificationButton" type="button">
+            <span>Notificaciones</span>
+            <strong id="notificationCount">0</strong>
+          </button>
+
+          <div id="roleNav"></div>
+        </aside>
+
+        <div class="dashboard-main" id="demo">
+          <aside class="notification-drawer hidden" id="notificationDrawer" aria-live="polite">
+            <div class="card-heading">
+              <div>
+                <span class="chip warning">Notificaciones</span>
+                <h3>Actividad pendiente</h3>
+              </div>
+              <button class="ghost-button small-button" id="closeNotifications" type="button">
+                Cerrar
+              </button>
+            </div>
+            <div id="notificationDrawerList" class="notification-list"></div>
+          </aside>
+
+          <div class="dashboard-toolbar">
+            <div>
+              <p class="eyebrow" id="workspaceEyebrow">Perfil Cliente</p>
+              <h2 id="panel-title">Dashboard</h2>
+            </div>
+            <div class="toolbar-actions">
+              <button class="ghost-button" id="refreshData">Actualizar datos</button>
+              <button class="primary-action small" id="generateReport">
+                Generar reporte
+              </button>
+            </div>
+          </div>
+
+          <section class="panel active" data-panel-content="client-dashboard" data-role-content="cliente">
+            <div class="kpi-grid">
+              <article class="kpi-card">
+                <span>Sobrestock</span>
+                <strong id="clientOverstockKpi">—</strong>
+                <small id="clientOverstockText">Sube una base de datos para calcular este indicador.</small>
+              </article>
+              <article class="kpi-card accent">
+                <span>Quiebres de inventario</span>
+                <strong id="clientStockoutKpi">—</strong>
+                <small id="clientStockoutText">Aún no hay productos analizados.</small>
+              </article>
+              <article class="kpi-card">
+                <span>Registros analizados</span>
+                <strong id="clientProcessingKpi">—</strong>
+                <small id="clientProcessingText">Procesa un archivo para generar métricas.</small>
+              </article>
+              <article class="kpi-card dark">
+                <span>Disponibilidad estimada</span>
+                <strong id="clientAccuracyKpi">—</strong>
+                <small id="clientAccuracyText">Sin predicción hasta cargar una base.</small>
+              </article>
+            </div>
+
+            <div class="dashboard-grid">
+              <article class="visual-card wide">
+                <div class="card-heading">
+                  <div>
+                    <span class="chip">Predicción</span>
+                    <h3>Demanda proyectada por campaña</h3>
+                  </div>
+                  <small id="demandChartCaption">Sin base procesada</small>
+                </div>
+                <div class="period-controls" aria-label="Periodo del gráfico de demanda">
+                  <button class="period-chip" data-period="semanal" type="button">Semanal</button>
+                  <button class="period-chip active" data-period="mensual" type="button">Mensual</button>
+                  <button class="period-chip" data-period="trimestral" type="button">Trimestral</button>
+                  <button class="period-chip" data-period="anual" type="button">Anual</button>
+                </div>
+                <div class="period-stats" id="periodStats"></div>
+                <div class="line-chart" id="demandChart" aria-label="Gráfico de demanda"></div>
+              </article>
+
+              <article class="visual-card">
+                <div class="card-heading">
+                  <div>
+                    <span class="chip warning">Riesgo</span>
+                    <h3>Alertas críticas</h3>
+                  </div>
+                </div>
+                <ul class="alert-list" id="clientAlertList"></ul>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel" data-panel-content="client-inventory" data-role-content="cliente">
+            <div class="upload-card">
+              <div>
+                <span class="chip">Carga automatizada</span>
+                <h3>Sube tu base en Excel, CSV o PDF</h3>
+                <p>
+                  Carga información de ventas, inventario y abastecimiento para
+                  obtener reportes automatizados y recomendaciones logísticas.
+                  Las proyecciones son estimaciones orientativas basadas en la información cargada.
+                </p>
+              </div>
+              <label class="upload-zone">
+                <input type="file" id="fileInput" accept=".xlsx,.xls,.csv,.txt,.pdf" />
+                <span>Arrastra o selecciona tu archivo</span>
+                <small id="fileStatus">Excel (.xlsx o .xls), CSV o PDF. Máximo 8 MB.</small>
+              </label>
+              <p class="upload-format-help">La tabla debe incluir Producto, Stock y Demanda o Ventas; Categoría es opcional. En Excel se utiliza la primera hoja con esos encabezados. El PDF debe contener una tabla con texto seleccionable, no una foto ni un escaneo.</p>
+              <div class="upload-actions">
+                <button class="primary-action" id="processFileButton" type="button" disabled>
+                  Procesar archivo y generar reporte
+                </button>
+                <small id="processStatus">Selecciona una base de datos para iniciar el análisis.</small>
+              </div>
+            </div>
+
+            <article class="generated-report hidden" id="generatedReport">
+              <div class="card-heading">
+                <div>
+                  <span class="chip success">Reporte generado</span>
+                  <h3 id="reportTitle">Análisis predictivo de inventario</h3>
+                </div>
+                <span class="status-pill" id="reportDate">Procesado hoy</span>
+              </div>
+              <div class="report-kpis" id="reportKpis"></div>
+              <div class="report-grid">
+                <div class="chart-card">
+                  <div class="card-heading">
+                    <div>
+                      <span class="chip">ABC</span>
+                      <h3>Distribución de productos</h3>
+                    </div>
+                  </div>
+                  <div class="stack-chart" id="abcStackChart"></div>
+                </div>
+                <div class="chart-card">
+                  <div class="card-heading">
+                    <div>
+                      <span class="chip warning">Riesgo</span>
+                      <h3>Prioridades detectadas</h3>
+                    </div>
+                  </div>
+                  <div class="horizontal-chart" id="riskChart"></div>
+                </div>
+              </div>
+              <div class="recommendation-list" id="reportRecommendations"></div>
+            </article>
+
+            <article class="history-card" id="inventoryHistoryCard">
+              <div class="card-heading">
+                <div>
+                  <span class="chip">Historial</span>
+                  <h3>Bases de datos subidas</h3>
+                </div>
+                <small>Ordenado por fecha y hora de procesamiento</small>
+              </div>
+              <div class="history-list" id="inventoryHistoryList"></div>
+            </article>
+
+            <div class="table-card">
+              <div class="card-heading">
+                <div>
+                  <span class="chip">Inventario</span>
+                  <h3>Productos monitoreados</h3>
+                  <p class="abc-note">
+                    La clasificación ABC organiza el inventario por importancia:
+                    A prioriza el aporte acumulado a la demanda hasta 80%, B hasta 95%
+                    y C el resto. Sin precios, no representa valor monetario.
+                  </p>
+                </div>
+                <span class="status-pill" id="inventoryStatusPill">Sin base procesada</span>
+              </div>
+              <div class="data-view-switch" aria-label="Vista de datos">
+                <button class="filter-chip active" data-inventory-view="all" type="button">
+                  Ver base completa
+                </button>
+                <button class="filter-chip" data-inventory-view="classified" type="button">
+                  Ver clasificación por categoría
+                </button>
+              </div>
+              <div class="category-summary hidden" id="categorySummary"></div>
+              <div class="table-wrap">
+                <table>
+                  <thead id="inventoryHead"></thead>
+                  <tbody id="inventoryRows"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" data-panel-content="client-classification" data-role-content="cliente">
+            <div class="classification-intro">
+              <div>
+                <span class="chip">Base analizada</span>
+                <h3 id="classificationSource">Sube una base de datos para ver la clasificación</h3>
+              </div>
+              <p>
+                ABC prioriza la demanda acumulada: A hasta 80%, B hasta 95% y C el resto.
+                Sin precios, no representa valor monetario. A requiere mayor
+                seguimiento, B control intermedio y C seguimiento básico. Las
+                dimensiones de rotación, riesgo, estacionalidad y servicio se
+                recalculan según la base procesada.
+              </p>
+            </div>
+            <article class="history-card">
+              <div class="card-heading">
+                <div>
+                  <span class="chip">Historial de clasificación</span>
+                  <h3>Bases disponibles para clasificar</h3>
+                </div>
+                <small>Selecciona una base para ver su clasificación</small>
+              </div>
+              <div class="history-list" id="classificationHistoryList"></div>
+            </article>
+            <div class="dimension-filter" aria-label="Filtros de clasificación">
+              <button class="filter-chip active" data-filter="todos">Todos</button>
+              <button class="filter-chip" data-filter="rotacion">Rotación</button>
+              <button class="filter-chip" data-filter="riesgo">Riesgo</button>
+              <button class="filter-chip" data-filter="estacionalidad">Estacionalidad</button>
+              <button class="filter-chip" data-filter="servicio">Servicio</button>
+            </div>
+            <div class="dimension-grid" id="dimensionGrid"></div>
+          </section>
+
+          <section class="panel" data-panel-content="client-simulator" data-role-content="cliente">
+            <div class="simulator in-dashboard">
+              <div class="simulator-copy">
+                <p class="eyebrow">Análisis de escenarios</p>
+                <h2>Evalúa una variación de stock.</h2>
+                <p>
+                  Ajusta el escenario y observa cómo cambia la recomendación
+                  logística antes de ejecutar una decisión operativa.
+                </p>
+              </div>
+              <div class="simulator-card">
+                <label for="stockRange">Variación de stock</label>
+                <input type="range" id="stockRange" min="-100" max="100" value="0" disabled />
+                <div class="range-output">
+                  <strong id="stockValue">Sin datos</strong>
+                  <span id="stockMessage">Procesa una base para evaluar variaciones.</span>
+                </div>
+                <div class="scenario-grid">
+                  <div>
+                    <span>Riesgo estimado</span>
+                    <strong id="riskValue">Sin datos</strong>
+                  </div>
+                  <div>
+                    <span>Nivel de servicio</span>
+                    <strong id="serviceValue">Sin datos</strong>
+                  </div>
+                  <div>
+                    <span>Acción sugerida</span>
+                    <strong id="actionValue">Sin datos</strong>
+                  </div>
+                </div>
+                <div class="scenario-chart-card">
+                  <div class="card-heading">
+                    <div>
+                      <span class="chip">Gráficos del escenario</span>
+                      <h3>Impacto estimado</h3>
+                    </div>
+                    <small id="scenarioChartCaption">Sin base procesada</small>
+                  </div>
+                  <div class="scenario-bars" aria-label="Gráficos del escenario">
+                    <div>
+                      <span>Stock disponible</span>
+                      <i id="scenarioStockBar" style="--value: 0%"></i>
+                      <strong id="scenarioStockMetric">Sin datos</strong>
+                    </div>
+                    <div>
+                      <span>Riesgo operativo</span>
+                      <i id="scenarioRiskBar" style="--value: 0%"></i>
+                      <strong id="scenarioRiskMetric">Sin datos</strong>
+                    </div>
+                    <div>
+                      <span>Nivel de servicio</span>
+                      <i id="scenarioServiceBar" style="--value: 0%"></i>
+                      <strong id="scenarioServiceMetric">Sin datos</strong>
+                    </div>
+                    <div>
+                      <span>Sobrestock</span>
+                      <i id="scenarioOverstockBar" style="--value: 0%"></i>
+                      <strong id="scenarioOverstockMetric">Sin datos</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" data-panel-content="client-support" data-role-content="cliente">
+            <div class="support-grid">
+              <form class="support-form" id="ticketForm">
+                <span class="chip warning">Mesa de ayuda</span>
+                <h3>Reportar un problema con la plataforma</h3>
+                <p>
+                  Describe el inconveniente. El administrador recibirá una
+                  notificación y podrá resolver el caso desde su perfil.
+                </p>
+                <label>
+                  Área afectada
+                  <select name="area" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="Carga de archivos">Carga de archivos</option>
+                    <option value="Dashboard">Dashboard</option>
+                    <option value="Predicción de demanda">Predicción de demanda</option>
+                    <option value="Usuarios y acceso">Usuarios y acceso</option>
+                  </select>
+                </label>
+                <label>
+                  Prioridad
+                  <select name="priority" required>
+                    <option value="">Selecciona una prioridad</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Media">Media</option>
+                    <option value="Baja">Baja</option>
+                  </select>
+                </label>
+                <label>
+                  Título del problema
+                  <input name="title" type="text" placeholder="Ej. No carga mi archivo CSV" required />
+                </label>
+                <label class="full-field">
+                  Descripción
+                  <textarea
+                    name="description"
+                    rows="5"
+                    placeholder="Explica qué ocurrió, cuándo empezó y qué necesitas que se revise."
+                    required
+                  ></textarea>
+                </label>
+                <button class="primary-action" type="submit">Enviar problema</button>
+                <strong class="form-status" id="ticketStatus" aria-live="polite"></strong>
+              </form>
+
+              <article class="table-card">
+                <div class="card-heading">
+                  <div>
+                    <span class="chip">Mis casos</span>
+                    <h3>Seguimiento de problemas</h3>
+                  </div>
+                </div>
+                <div id="clientTicketList" class="ticket-list"></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel" data-panel-content="admin-dashboard" data-role-content="admin">
+            <div class="kpi-grid">
+              <article class="kpi-card dark">
+                <span>Empresas activas</span>
+                <strong id="adminCompanyCount">0</strong>
+                <small>Perfiles empresariales habilitados</small>
+              </article>
+              <article class="kpi-card">
+                <span>Problemas abiertos</span>
+                <strong id="adminOpenTicketCount">0</strong>
+                <small>Casos pendientes de atención</small>
+              </article>
+              <article class="kpi-card accent">
+                <span>Solicitudes nuevas</span>
+                <strong id="adminLeadCount">0</strong>
+                <small>Empresas interesadas en comprar acceso</small>
+              </article>
+              <article class="kpi-card">
+                <span>Archivos procesados</span>
+                <strong>—</strong>
+                <small>Consulta el historial de cada cliente</small>
+              </article>
+            </div>
+
+            <div class="dashboard-grid">
+              <article class="visual-card">
+                <div class="card-heading">
+                  <div>
+                    <span class="chip warning">Notificaciones</span>
+                    <h3>Prioridad administrativa</h3>
+                  </div>
+                </div>
+                <ul class="alert-list" id="adminNotificationList"></ul>
+              </article>
+              <article class="visual-card">
+                <div class="card-heading">
+                  <div>
+                    <span class="chip">Operación</span>
+                    <h3>Estado de la plataforma</h3>
+                  </div>
+                </div>
+                <div class="platform-status-grid">
+                  <div>
+                    <span>Nyle</span>
+                    <strong>Disponible</strong>
+                  </div>
+                  <div>
+                    <span>Carga de archivos</span>
+                    <strong>CSV local</strong>
+                  </div>
+                  <div>
+                    <span>Reportes</span>
+                    <strong>Análisis de inventario</strong>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="admin-chart-grid">
+              <article class="chart-card">
+                <div class="card-heading">
+                  <div>
+                    <span class="chip">Planes</span>
+                    <h3>Empresas por plan contratado</h3>
+                  </div>
+                </div>
+                <div class="horizontal-chart" id="adminPlanChart"></div>
+              </article>
+              <article class="chart-card">
+                <div class="card-heading">
+                  <div>
+                    <span class="chip warning">Soporte</span>
+                    <h3>Problemas por estado</h3>
+                  </div>
+                </div>
+                <div class="horizontal-chart" id="adminTicketChart"></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel" data-panel-content="admin-companies" data-role-content="admin">
+            <div class="table-card">
+              <div class="card-heading">
+                <div>
+                  <span class="chip">Empresas</span>
+                  <h3>Empresas con perfil activo</h3>
+                </div>
+                <span class="status-pill">Control administrativo</span>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Empresa</th>
+                      <th>RUC</th>
+                      <th>Plan</th>
+                      <th>Contacto</th>
+                      <th>Correo</th>
+                      <th>Teléfono</th>
+                      <th>Usuarios</th>
+                      <th>Estado</th>
+                      <th>Última carga</th>
+                      <th>Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminCompaniesRows"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <form class="company-editor hidden" id="companyEditForm">
+              <div class="card-heading">
+                <div>
+                  <span class="chip">Editar perfil</span>
+                  <h3>Datos de la empresa</h3>
+                </div>
+                <button class="ghost-button" type="button" id="cancelCompanyEdit">
+                  Cancelar
+                </button>
+              </div>
+              <input type="hidden" name="id" />
+              <label>
+                Empresa
+                <input name="company" type="text" required />
+              </label>
+              <label>
+                RUC
+                <input name="ruc" type="text" required />
+              </label>
+              <label>
+                Plan
+                <select name="plan" required>
+                  <option value="Retail Pro">Retail Pro</option>
+                  <option value="Enterprise">Enterprise</option>
+                  <option value="Piloto">Piloto</option>
+                </select>
+              </label>
+              <label>
+                Contacto
+                <input name="contact" type="text" required />
+              </label>
+              <label>
+                Correo
+                <input name="email" type="email" required />
+              </label>
+              <label>
+                Teléfono
+                <input name="phone" type="tel" required />
+              </label>
+              <label>
+                Usuarios asignados
+                <input name="users" type="number" min="1" required />
+              </label>
+              <label>
+                Estado
+                <select name="status" required>
+                  <option value="Activo">Activo</option>
+                  <option value="En revisión">En revisión</option>
+                  <option value="Suspendido">Suspendido</option>
+                </select>
+              </label>
+              <label class="full-field">
+                Última carga / observación
+                <input name="lastUpload" type="text" required />
+              </label>
+              <button class="primary-action" type="submit">Guardar cambios</button>
+              <strong class="form-status" id="companyEditStatus" aria-live="polite"></strong>
+            </form>
+          </section>
+
+          <section class="panel" data-panel-content="admin-users" data-role-content="admin">
+            <div class="table-card">
+              <div class="card-heading">
+                <div>
+                  <span class="chip">Usuarios</span>
+                  <h3>Perfiles, roles y accesos</h3>
+                </div>
+                <span class="status-pill">Seguridad de cuentas</span>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Usuario</th>
+                      <th>Empresa</th>
+                      <th>Rol</th>
+                      <th>Estado</th>
+                      <th>Último ingreso</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminUsersRows"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" data-panel-content="admin-leads" data-role-content="admin">
+            <div class="lead-board">
+              <article class="table-card">
+                <div class="card-heading">
+                  <div>
+                    <span class="chip warning">Pendientes</span>
+                    <h3>Empresas por contactar</h3>
+                  </div>
+                  <span class="status-pill">Aún sin contacto</span>
+                </div>
+                <div id="adminPendingLeadsList" class="lead-list"></div>
+              </article>
+            </div>
+
+            <article class="table-card">
+              <div class="card-heading">
+                <div>
+                  <span class="chip success">Contactadas</span>
+                  <h3>Empresas ya contactadas</h3>
+                </div>
+                <span class="status-pill">Seguimiento comercial</span>
+              </div>
+              <div id="adminContactedLeadsList" class="lead-list"></div>
+            </article>
+
+            <div class="table-card">
+              <div class="card-heading">
+                <div>
+                  <span class="chip">Historial</span>
+                  <h3>Historial de solicitudes comerciales</h3>
+                </div>
+                <span class="status-pill">Contacto y estado</span>
+              </div>
+              <div id="adminLeadHistoryList" class="lead-list"></div>
+            </div>
+          </section>
+
+          <section class="panel" data-panel-content="admin-tickets" data-role-content="admin">
+            <div class="table-card">
+              <div class="card-heading">
+                <div>
+                  <span class="chip warning">Soporte</span>
+                  <h3>Problemas reportados por clientes</h3>
+                </div>
+                <span class="status-pill">Resolver y cerrar casos</span>
+              </div>
+              <div id="adminTicketList" class="ticket-list admin-ticket-list"></div>
+            </div>
+          </section>
+
+          <section class="panel" data-panel-content="admin-platform" data-role-content="admin">
+            <div class="performance-grid">
+              <article class="performance-card success">
+                <span class="chip success">Servicio</span>
+                <h3>Monitoreo operativo</h3>
+                <ul>
+                  <li>Nyle permite consultar las bases de inventario de cada cliente.</li>
+                  <li>Carga de archivos validada por formato y tamaño.</li>
+                  <li>Reportes generados sin errores críticos.</li>
+                  <li>Información de inventario organizada por cuenta de cliente.</li>
+                </ul>
+              </article>
+              <article class="performance-card">
+                <span class="chip warning">Acciones</span>
+                <h3>Tareas del administrador</h3>
+                <ul>
+                  <li>Revisar incidencias abiertas y resolver prioridades altas.</li>
+                  <li>Validar solicitudes de nuevas empresas retail.</li>
+                  <li>Actualizar estados de usuarios y accesos.</li>
+                  <li>Supervisar archivos procesados por cada empresa.</li>
+                </ul>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel" data-panel-content="account-panel">
+            <article class="profile-detail" id="roleDetail"></article>
+          </section>
+
+          <aside class="report-toast" id="reportToast" aria-live="polite">
+            Reporte generado correctamente.
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <button id="nyleLauncher" hidden aria-controls="nylePanel" aria-expanded="false"><svg class="nyle-robot" viewBox="0 0 80 80" aria-hidden="true" focusable="false"><path d="M40 10v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="8" r="5" fill="#d8f275"/><rect x="10" y="23" width="60" height="46" rx="20" fill="#d8f275"/><rect x="18" y="30" width="44" height="27" rx="12" fill="#111b2d"/><g class="robot-eyes" fill="#2bc4a4"><ellipse cx="30" cy="42" rx="4" ry="5"/><ellipse cx="50" cy="42" rx="4" ry="5"/></g><path d="M33 61q7 5 14 0" fill="none" stroke="#111b2d" stroke-width="3" stroke-linecap="round"/><path d="M7 38v14M73 38v14" stroke="#2bc4a4" stroke-width="6" stroke-linecap="round"/></svg><span>Hablar con Nyle</span></button>
+<aside id="nylePanel" hidden role="dialog" aria-modal="true" aria-labelledby="nyleTitle">
+  <header class="nyle-header"><div class="nyle-identity"><svg class="nyle-robot" viewBox="0 0 80 80" aria-hidden="true" focusable="false"><path d="M40 10v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="40" cy="8" r="5" fill="#d8f275"/><rect x="10" y="23" width="60" height="46" rx="20" fill="#d8f275"/><rect x="18" y="30" width="44" height="27" rx="12" fill="#111b2d"/><g class="robot-eyes" fill="#2bc4a4"><ellipse cx="30" cy="42" rx="4" ry="5"/><ellipse cx="50" cy="42" rx="4" ry="5"/></g><path d="M33 61q7 5 14 0" fill="none" stroke="#111b2d" stroke-width="3" stroke-linecap="round"/><path d="M7 38v14M73 38v14" stroke="#2bc4a4" stroke-width="6" stroke-linecap="round"/></svg><div><h2 id="nyleTitle">Nyle</h2><p>Tu asistente de inventario</p></div></div><button id="closeNyle" class="ghost-button" aria-label="Cerrar Nyle">Cerrar</button></header>
+  <div class="nyle-source"><label for="nyleSource">Base de datos para consultar</label><select id="nyleSource"><option value="">Selecciona una base</option></select><p id="nyleSourceStatus" role="status">Selecciona una base para consultar sus productos.</p></div>
+  <div id="nyleMessages" role="log" aria-live="polite"></div>
+  <div class="nyle-prompts"><button type="button">Alertas de quiebre</button><button type="button">Clasificación ABC</button><button type="button">Sobrestock</button><button type="button">Guía del dashboard</button></div>
+  <form id="nyleForm"><input name="question" aria-label="Consulta para Nyle" placeholder="¿Qué revisamos hoy?" maxlength="1000" required><button class="primary-action">Enviar</button></form>
+  <p class="nyle-footnote">Nyle utiliza la base seleccionada. Revisa sus recomendaciones antes de tomar decisiones.</p>
+</aside>
+
+    <script src="local.js"></script>
+    <script src="script.js"></script>
+  <p style="text-align:center;padding:16px;font-size:.85rem;color:#60706a">Datos guardados solo en este navegador. Usa información de ejemplo. <a href="LEEME.txt">Información de esta versión</a></p></body>
+</html>
